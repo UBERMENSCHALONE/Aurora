@@ -1,0 +1,29 @@
+image: docker:git
+services:
+  - docker:dind
+
+stages:
+  - build
+  - check
+
+check:
+  except:
+    - master
+  image: gradle:6.9.0-jdk11
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build/
+  stage: check
+  script: gradle check
+
+build:
+  only:
+    - master
+  image: gradle:6.9.0-jdk11
+  artifacts:
+    expire_in: 1 day
+    paths:
+      - build/
+  stage: build
+  script: gradle build
